@@ -68,9 +68,17 @@ function buildColorJSON()
 		effect=9 # color
 	fi
 	
+	# Similarly, if everything is 0, we should just turn the light off:
+	if [ $red -eq 0 ] && [ $green -eq 0 ] && [ $blue -eq 0]
+	then
+		iswitch=0 # off
+	else
+		iswitch=1 # on
+	fi
+	
 	colorJSON="'r':'$red', 'g':'$green', 'b':'$blue', 'bright':'255'"
 	serialJSON=`for s in "${serials[@]}" ; do echo -n "{ 'sn':'$s' }, " ; done`
-	JSON="{ 'cmd':'light_ctrl', $colorJSON, 'sn_list':[ $serialJSON ], 'iswitch':'1', 'matchValue':'0', 'effect':'$effect' }"
+	JSON="{ 'cmd':'light_ctrl', $colorJSON, 'sn_list':[ $serialJSON ], 'iswitch':'$iswitch', 'matchValue':'0', 'effect':'$effect' }"
 	echo $JSON
 }
 
