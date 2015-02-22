@@ -69,7 +69,7 @@ function buildColorJSON()
 	fi
 	
 	# Similarly, if everything is 0, we should just turn the light off:
-	if [ $red -eq 0 ] && [ $green -eq 0 ] && [ $blue -eq 0]
+	if [ $red -eq 0 ] && [ $green -eq 0 ] && [ $blue -eq 0 ]
 	then
 		iswitch=0 # off
 	else
