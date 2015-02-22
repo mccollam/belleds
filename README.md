@@ -6,6 +6,7 @@ Edit environment.conf to reflect your Q Station's IP address and your bulb seria
 End-user scripts:
 -----------------
 * Qcolor.sh - set bulb color from a GUI.  (For now you will need to edit the script to add your bulb serial numbers and Q Station IP address.)
+* Qmorse.sh - send a message in Morse code
 
 Other files:
 ------------
