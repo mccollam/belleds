@@ -7,6 +7,7 @@ End-user scripts:
 -----------------
 * Qcolor.sh - set bulb color from a GUI.  (For now you will need to edit the script to add your bulb serial numbers and Q Station IP address.)
 * Qmorse.sh - send a message in Morse code
+* Qprompt.sh - use with the Bash PROMPT_COMMAND environment variable to make a bulb turn green when a command succeeds and red when it fails (possibly useful for long-running commands)
 
 Other files:
 ------------
