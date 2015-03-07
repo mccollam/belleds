@@ -34,8 +34,13 @@ function getColor()
 
 function getBulbs()
 {
-	# This probably shouldn't rely on just setting the bulb array
-	# as a variable but it's quick and easy.
+	# This relies on listBulbs() having been called first!
+	
+	if [ ${#bulbserials} -eq 0 ]
+	then
+		echo "ERROR: Empty bulb list!  Is your Q station online (and did your script call listBulbs())?"
+		exit 1
+	fi
 	
 	bulblist=`for (( i=0 ; i<${#bulbserials[@]} ; i++ )) ; do echo -n "TRUE ${bulbserials[$i]} ${bulbnames[$i]} "; done`
 	if selection=`zenity --width 400 --height 400 --list --checklist --multiple --separator=',' --text "Select one or more bulbs" --column "Selected" --column "Serial Number" --column "Name" $bulblist`
