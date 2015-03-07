@@ -56,6 +56,31 @@ function getBulbs()
 	fi
 }
 
+function getSingleBulb()
+{
+	# This relies on listBulbs() having been called first!
+	
+	if [ ${#bulbserials} -eq 0 ]
+	then
+		echo "ERROR: Empty bulb list!  Is your Q station online (and did your script call listBulbs())?"
+		exit 1
+	fi
+	
+	bulblist=$(for (( i=0 ; i<${#bulbserials[@]} ; i++ )) ; do echo -n "FALSE ${bulbserials[$i]} ${bulbnames[$i]} " ; done)
+	if selection=`zenity --width 400 --height 400 --list --radiolist --text "Select one or more bulbs" --column "Selected" --column "Serial Number" --column "Name" $bulblist`
+	then
+		serial=`echo $selection | sed s/\"//g`
+		if [ ! "$serial" ]
+		then
+			echo "No bulb selected!"
+			exit 1
+		fi
+	else
+		echo "No bulb selected!"
+		exit 1
+	fi
+}
+
 function listBulbs()
 {
 	# Get the list of bulbs known by the Q station and populate the
@@ -95,6 +120,41 @@ function buildColorJSON()
 	serialJSON=`for s in "${serials[@]}" ; do echo -n "{ 'sn':'$s' }, " ; done`
 	JSON="{ 'cmd':'light_ctrl', $colorJSON, 'sn_list':[ $serialJSON ], 'iswitch':'$iswitch', 'matchValue':'0', 'effect':'$effect' }"
 	echo $JSON
+}
+
+function setBulbNameJSON()
+{
+	# Expects two parameters, bulb serial number and bulb name
+
+	echo "{ 'cmd':'set_title', 'sn':'$1', 'title':'$2' }"
+}
+
+function getBulbName()
+{
+	# Retrieve a name of a bulb based on the serial number
+	for (( i=0 ; i<${#bulbserials[@]} ; i++ ))
+	do
+		if [ "${bulbserials[$i]}" = "$1" ]
+		then
+			echo "${bulbnames[$i]}"
+		fi
+	done
+}
+
+function getNewBulbName()
+{
+	# Can optionally pass in a default name for the bulb
+	if ! name=`zenity --entry --title "Name a bulb" --text="Enter a new name for the bulb:" --entry-text="$1"`
+	then
+		echo "No name specified!"
+		exit 1
+	fi
+	
+	if [ ! "$name" ]
+	then
+		echo "Name cannot be blank!"
+		exit 1
+	fi
 }
 
 function sendCommand()
