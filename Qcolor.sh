@@ -21,9 +21,16 @@ function sanityCheck()
 		echo "Netcat is not installed."
 		exit 1
 	fi
+	
+	if ! which jq > /dev/null
+	then
+		echo "jq is not installed."
+		exit 1
+	fi
 }
 
 sanityCheck
+listBulbs
 getBulbs
 getColor
 JSON=$(buildColorJSON)

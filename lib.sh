@@ -37,23 +37,33 @@ function getBulbs()
 	# This probably shouldn't rely on just setting the bulb array
 	# as a variable but it's quick and easy.
 	
-	bulblist=`for b in "${!bulbs[@]}"; do echo -n "TRUE \"$b\" "; done`
-	if selection=`zenity --list --checklist --multiple --separator=',' --text "Select one or more bulbs" --column "Selected" --column "Bulb" $bulblist`
+	bulblist=`for (( i=0 ; i<${#bulbserials[@]} ; i++ )) ; do echo -n "TRUE ${bulbserials[$i]} ${bulbnames[$i]} "; done`
+	if selection=`zenity --width 400 --height 400 --list --checklist --multiple --separator=',' --text "Select one or more bulbs" --column "Selected" --column "Serial Number" --column "Name" $bulblist`
 	then
 		selection=`echo $selection | sed s/\"//g`
 		oldIFS="$IFS"
 		IFS=,
-		selectedbulbs=( $selection )
-		serials=()
-		for s in "${selectedbulbs[@]}"
-		do
-			serials+=(${bulbs[$s]})
-		done
+		serials=( $selection )
 		IFS="$oldIFS"
 	else
 		echo "No bulbs selected!"
 		exit 1
 	fi
+}
+
+function listBulbs()
+{
+	# Get the list of bulbs known by the Q station and populate the
+	# bulb array
+	
+	bulbJSON=$(sendCommandGetResponse "{ 'cmd':'light_list' }")
+	
+	# We need to have two arrays rather than a single associative array
+	# because it's valid to have two bulbs with the same name
+	# (indeed, this is the default state)
+	# TODO: There's probably a more efficient way to use jq here
+	read -a bulbnames <<< `echo $bulbJSON | jq '[.led][][].title' | sed s/\ /_/g | sed s/\"//g`
+	read -a bulbserials <<< `echo $bulbJSON | jq '[.led][][].sn' | sed s/\"//g`
 }
 
 function buildColorJSON()
@@ -86,4 +96,10 @@ function sendCommand()
 {
 	# Blast it to the Q station without waiting for a reply (ugly, but fast)
 	echo $@ | nc -u $QstationIP 11600 -w0
+}
+
+function sendCommandGetResponse()
+{
+	# Send command to the Q station and return a response
+	echo `echo $@ | nc -u $QstationIP 11600 -w1`
 }

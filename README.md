@@ -3,6 +3,8 @@ Simple utilities for working with the Belleds Q Station and color-changing light
 
 Edit environment.conf to reflect your Q Station's IP address and your bulb serial numbers.
 
+You will need to install the jq package (for JSON parsing) to use these scripts.  (In Ubuntu, this is 'sudo apt-get install jq'.)
+
 End-user scripts:
 -----------------
 * Qcolor.sh - set bulb color from a GUI.  (For now you will need to edit the script to add your bulb serial numbers and Q Station IP address.)
