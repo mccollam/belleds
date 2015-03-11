@@ -328,6 +328,7 @@ function textToMorse()
 	done
 }
 
+listBulbs
 getBulbs
 getMessage
 
