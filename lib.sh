@@ -67,7 +67,7 @@ function getSingleBulb()
 	fi
 	
 	bulblist=$(for (( i=0 ; i<${#bulbserials[@]} ; i++ )) ; do echo -n "FALSE ${bulbserials[$i]} ${bulbnames[$i]} " ; done)
-	if selection=`zenity --width 400 --height 400 --list --radiolist --text "Select one or more bulbs" --column "Selected" --column "Serial Number" --column "Name" $bulblist`
+	if selection=`zenity --width 400 --height 400 --list --radiolist --text "Select a bulb" --column "Selected" --column "Serial Number" --column "Name" $bulblist`
 	then
 		serial=`echo $selection | sed s/\"//g`
 		if [ ! "$serial" ]
