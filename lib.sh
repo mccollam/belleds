@@ -122,7 +122,7 @@ function buildColorJSON()
 		iswitch=1 # on
 	fi
 	
-	colorJSON="'r':'$red', 'g':'$green', 'b':'$blue', 'bright':'255'"
+	colorJSON="'r':'$red', 'g':'$green', 'b':'$blue', 'bright':'100'"
 	serialJSON=`for s in "${serials[@]}" ; do echo -n "{ 'sn':'$s' }, " ; done`
 	JSON="{ 'cmd':'light_ctrl', $colorJSON, 'sn_list':[ $serialJSON ], 'iswitch':'$iswitch', 'matchValue':'0', 'effect':'$effect' }"
 	echo $JSON
