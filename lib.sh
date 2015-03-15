@@ -8,7 +8,13 @@ function getColor()
 	# This probably shouldn't rely on just setting the r/g/b variables
 	# but it's quick and easy.
 	
-	if color=`zenity --color-selection`
+	# Get existing color (if any; for looping) as hex:
+	if [[ $red = "" ]] ; then red=255 ; fi
+	if [[ $green = "" ]] ; then green=255 ; fi
+	if [[ $blue = "" ]] ; then blue=255 ; fi
+	cur=`printf "#%02X%02X%02X" $red $green $blue`
+
+	if color=`zenity --color-selection --color=$cur`
 	then
 		# Convert from hex to a tuple of RGB in decimal
 		# NB: It seems at least some versions of zenity return color
