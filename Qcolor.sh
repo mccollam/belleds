@@ -29,10 +29,54 @@ function sanityCheck()
 	fi
 }
 
+function usage()
+{
+	echo "$0 - Control Belleds Q light bulbs"
+	echo
+	echo "Usage:"
+	echo "   $0 [-l|--loop] [-h|--help]"
+	echo
+	echo "      -l | --loop - Continue to loop through the color setting dialog until cancel is pressed (useful for tweaking specific colors)"
+	echo "      -h | --help - Display this message"
+}
+
+ARGS=$(getopt -o l,h -l "loop,help" -n "$0" -- "$@");
+eval set -- "$ARGS"
+loop=0
+while true
+do
+	case "$1" in
+		-l|--loop)
+			loop=1
+			shift
+			;;
+		-h|--help)
+			usage
+			shift
+			exit 0
+			;;
+		--)
+			shift
+			break
+			;;
+	esac
+done
+
+
 sanityCheck
 listBulbs
 getBulbs
-getColor
-JSON=$(buildColorJSON)
 
-sendCommand $JSON
+# Fake up a do...while loop (we always want to do this at least once)
+keepGoing=1
+until [ $keepGoing -ne 1 ]
+do
+	getColor
+	JSON=$(buildColorJSON)
+	sendCommand $JSON
+
+	if [ $loop -ne 1 ]
+	then
+		keepGoing=0
+	fi
+done
